@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al BUTHOOLA | Artfest Points Manager</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="logo-container">
+        <div class="logo-icon">🏆</div>
+        <div class="logo-text">Al BUTHOOLA</div>
+      </div>
+      
+      <nav class="nav-links">
+        <div class="nav-item">
+          <button class="nav-button active" data-target="view-leaderboard">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Leaderboard
+          </button>
+        </div>
+        <div class="nav-item admin-only-nav">
+          <button class="nav-button" data-target="view-score-entry">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Score Entry
+          </button>
+        </div>
+        <div class="nav-item admin-only-nav">
+          <button class="nav-button" data-target="view-events">
+            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            Programmes
+          </button>
+        </div>
+        <div class="nav-item admin-only-nav">
+          <button class="nav-button" data-target="view-teams">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm14 14v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Teams / Houses
+          </button>
+        </div>
+        <div class="nav-item admin-only-nav">
+          <button class="nav-button" data-target="view-settings">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </button>
+        </div>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-badge" id="user-badge-parent">
+          <div class="avatar">👨‍👩‍👧</div>
+          <div class="user-info">
+            <span class="user-name">Parent View</span>
+            <span class="user-role">Public Access</span>
+          </div>
+        </div>
+
+        <div class="user-badge" id="user-badge-admin" style="display: none;">
+          <div class="avatar">👑</div>
+          <div class="user-info">
+            <span class="user-name">Admin Mode</span>
+            <span class="user-role">Full Control</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 0.85rem;">
+          <button class="btn btn-secondary" id="btn-admin-login" style="width: 100%; font-size: 0.82rem; justify-content: center;">
+            🔐 Admin Login
+          </button>
+          <button class="btn btn-danger" id="btn-admin-logout" style="width: 100%; font-size: 0.82rem; justify-content: center; display: none;">
+            🔒 Exit Admin Mode
+          </button>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- MAIN CONTENT WINDOW -->
+    <main class="main-content">
+      
+      <!-- TOP ACTION BAR -->
+      <header>
+        <div>
+          <h1 id="page-title">Leaderboard</h1>
+          <p id="page-subtitle" style="font-size: 0.9rem; margin-top: 0.25rem;">Real-time standings and statistics</p>
+        </div>
+        <div class="header-actions">
+          <!-- Dynamically populated based on active view -->
+          <div class="search-wrapper" id="global-search-container" style="display: none;">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="view-search-input" placeholder="Search programmes..." class="search-input">
+          </div>
+          <button class="btn btn-primary" id="header-action-btn" style="display: none;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Action</span>
+          </button>
+        </div>
+      </header>
+      
+      <!-- 1. LEADERBOARD VIEW -->
+      <section id="view-leaderboard" class="view-panel active">
+        <!-- Stats summary -->
+        <div class="stats-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-icon" style="color: var(--accent-secondary);">📈</div>
+            <div class="stat-content">
+              <span class="stat-value" id="stat-completion">0%</span>
+              <span class="stat-label">Events Completed</span>
+            </div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-icon" style="color: var(--accent-primary);">🏆</div>
+            <div class="stat-content">
+              <span class="stat-value" id="stat-leading-house">-</span>
+              <span class="stat-label">Leading House</span>
+            </div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-icon" style="color: var(--accent-success);">🏅</div>
+            <div class="stat-content">
+              <span class="stat-value" id="stat-top-performer" style="font-size: 0.95rem; font-weight: 600; min-height: 2.2rem; display: flex; align-items: center;">-</span>
+              <span class="stat-label">Top Contributor</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="leaderboard-section">
+          <!-- Standings row listing -->
+          <div class="glass-card" style="margin-bottom: 2rem;">
+            <h3>House Standings</h3>
+            <div class="standings-list" id="leaderboard-standings">
+              <!-- Dynamically rendered standing rows -->
+            </div>
+          </div>
+
+          <!-- Student Solo Leaderboard -->
+          <div class="glass-card">
+            <h3 style="display: flex; align-items: center; justify-content: space-between;">
+              <span>🏆 Top 10 Solo Performers</span>
+              <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: normal;">Individual Solo Championship</span>
+            </h3>
+            <div class="standings-list" id="solo-student-leaderboard">
+              <!-- Dynamically rendered student rows -->
+            </div>
+          </div>
+          
+          <!-- Visual bar chart -->
+          <div class="glass-card chart-container">
+            <div class="chart-header">
+              <h3>Points Distribution</h3>
+              <span id="total-points-label" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;"></span>
+            </div>
+            <div class="bar-chart-vertical" id="leaderboard-chart">
+              <!-- Dynamically rendered chart bars -->
+            </div>
+            
+            <div style="margin-top: 1rem;">
+              <h4>Recent Winners</h4>
+              <div class="activity-feed" id="recent-winners-feed" style="margin-top: 1rem;">
+                <!-- Recent results feed -->
+              </div>
+          </div>
+        </div>
+
+        <!-- Programme Results Showcase Section -->
+        <div class="glass-card" style="margin-top: 2.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h3>Programme Results</h3>
+              <p style="font-size: 0.85rem;">Results breakdown for all completed artfest programmes</p>
+            </div>
+            <div class="filter-chips" style="margin-bottom: 0;" id="leaderboard-results-filters">
+              <button class="filter-chip active" data-lb-filter="all">All</button>
+              <button class="filter-chip" data-lb-filter="solo">Solo</button>
+              <button class="filter-chip" data-lb-filter="group">Group</button>
+              <button class="filter-chip" data-lb-filter="stage">Stage</button>
+              <button class="filter-chip" data-lb-filter="non-stage">Non-Stage</button>
+            </div>
+          </div>
+          
+          <div class="cards-grid" id="leaderboard-programme-results">
+            <!-- Dynamically rendered completed programme result cards -->
+          </div>
+        </div>
+      </section>
+      
+      <!-- 2. SCORE ENTRY VIEW -->
+      <section id="view-score-entry" class="view-panel">
+        <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+          <h3>Record Event Results</h3>
+          <p style="margin-bottom: 1.5rem;">Select an event, then add awardees with their positions and grades.</p>
+          
+          <form id="score-entry-form">
+            <div class="form-group">
+              <label for="entry-event-select">Programme / Event</label>
+              <select id="entry-event-select" required>
+                <option value="" disabled selected>-- Select an Event --</option>
+                <!-- Dynamically loaded events -->
+              </select>
+            </div>
+            
+            <div id="event-type-info-banner" style="display: none; margin-bottom: 1.5rem; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.9rem;">
+              <!-- Dynamic banner for Solo vs Group rules -->
+            </div>
+            
+            <!-- Unified Awardees Card -->
+            <div class="result-winner-card" style="border-left: 4px solid var(--accent-primary);">
+              <h4 style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                <span>🏆 Awarded Participants</span>
+                <button type="button" class="btn btn-secondary btn-icon-only" style="padding: 0.2rem 0.6rem; font-size: 0.85rem;" id="btn-add-awardee">+ Add Awardee</button>
+              </h4>
+              <div id="awardees-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <!-- Dynamic awardee rows will be rendered here -->
+              </div>
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="btn-clear-score-form">Clear</button>
+              <button type="submit" class="btn btn-primary">Save Standings</button>
+            </div>
+          </form>
+        </div>
+      </section>
+      
+      <!-- 3. EVENTS VIEW -->
+      <section id="view-events" class="view-panel">
+        <div class="filter-chips">
+          <button class="filter-chip active" data-filter="all">All</button>
+          <button class="filter-chip" data-filter="completed">Completed</button>
+          <button class="filter-chip" data-filter="pending">Pending</button>
+          <button class="filter-chip" data-filter="solo">Solo</button>
+          <button class="filter-chip" data-filter="group">Group</button>
+          <button class="filter-chip" data-filter="stage">Stage</button>
+          <button class="filter-chip" data-filter="non-stage">Non-Stage</button>
+        </div>
+        
+        <div class="cards-grid" id="events-grid-container">
+          <!-- Dynamically populated event cards -->
+        </div>
+      </section>
+      
+      <!-- 4. TEAMS VIEW -->
+      <section id="view-teams" class="view-panel">
+        <div class="cards-grid" id="teams-grid-container">
+          <!-- Dynamically populated team cards -->
+        </div>
+      </section>
+      
+      <!-- 5. SETTINGS VIEW -->
+      <section id="view-settings" class="view-panel">
+        <div class="glass-card" style="margin-bottom: 2rem; max-width: 800px;">
+          <h3>Point Scoring Rules</h3>
+          <p style="margin-bottom: 1.5rem;">Configure the default points awarded for placing in Solo and Group events.</p>
+          
+          <form id="rules-config-form">
+            <div class="rules-config-grid">
+              <!-- Solo Rules -->
+              <div class="glass-card" style="background: rgba(255, 255, 255, 0.01);">
+                <h4 style="margin-bottom: 1rem; color: var(--accent-primary);">Solo Event Points</h4>
+                <div class="form-group">
+                  <label for="rule-solo-1st">1st Place</label>
+                  <input type="number" id="rule-solo-1st" min="1" required>
+                </div>
+                <div class="form-group">
+                  <label for="rule-solo-2nd">2nd Place</label>
+                  <input type="number" id="rule-solo-2nd" min="1" required>
+                </div>
+                <div class="form-group">
+                  <label for="rule-solo-3rd">3rd Place</label>
+                  <input type="number" id="rule-solo-3rd" min="1" required>
+                </div>
+                <div class="form-group">
+                  <label for="rule-solo-gradeA">Grade A</label>
+                  <input type="number" id="rule-solo-gradeA" min="1" required>
+                </div>
+                <div class="form-group">
+                  <label for="rule-solo-gradeB">Grade B</label>
+                  <input type="number" id="rule-solo-gradeB" min="1" required>
+                </div>
+              </div>
+              
+              <!-- Group Rules -->
+              <div class="glass-card" style="background: rgba(255, 255, 255, 0.01);">
+                <h4 style="margin-bottom: 1rem; color: var(--accent-secondary);">Group Event Points</h4>
+                <div class="form-group">
+                  <label for="rule-group-1st">1st Place</label>
+                  <input type="number" id="rule-group-1st" min="1" required>
+                </div>
+                <div class="form-group">
+                  <label for="rule-group-2nd">2nd Place</label>
+                  <input type="number" id="rule-group-2nd" min="1" required>
+                </div>
+                <div class="form-group">
+                  <label for="rule-group-3rd">3rd Place</label>
+                  <input type="number" id="rule-group-3rd" min="1" required>
+                </div>
+                <div class="form-group">
+                  <label for="rule-group-gradeA">Grade A</label>
+                  <input type="number" id="rule-group-gradeA" min="1" required>
+                </div>
+                <div class="form-group">
+                  <label for="rule-group-gradeB">Grade B</label>
+                  <input type="number" id="rule-group-gradeB" min="1" required>
+                </div>
+              </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save Rules</button>
+          </form>
+        </div>
+        
+        <div class="glass-card" style="margin-bottom: 2rem; max-width: 800px;">
+          <h3>Data Management & Backups</h3>
+          <p style="margin-bottom: 1.5rem;">Export your current database configuration, import existing data, or clear/reset your records.</p>
+          
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" id="btn-export-db">
+              📥 Export Data (JSON)
+            </button>
+            <button class="btn btn-secondary" id="btn-trigger-import">
+              📤 Import Data (JSON)
+            </button>
+            <input type="file" id="file-import-input" accept=".json" style="display: none;">
+            
+            <button class="btn btn-danger" id="btn-reset-db">
+              ⚠️ Reset Database
+            </button>
+          </div>
+        </div>
+
+        <div class="glass-card" style="margin-bottom: 2rem; max-width: 800px;">
+          <h3>Security & Passcode</h3>
+          <p style="margin-bottom: 1.5rem;">Change the Administrator Passcode PIN used to unlock Admin Mode.</p>
+          
+          <form id="admin-pin-change-form">
+            <div class="form-row" style="max-width: 400px;">
+              <div class="form-group">
+                <label for="new-admin-pin">New Passcode PIN</label>
+                <input type="password" id="new-admin-pin" placeholder="Enter new PIN" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Passcode PIN</button>
+          </form>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+  
+  <!-- ================= MODALS ================= -->
+  
+  <!-- 1. ADD / EDIT EVENT MODAL -->
+  <div class="modal-backdrop" id="modal-event">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="event-modal-title">Create Programme</h3>
+        <button class="modal-close" onclick="closeModal('modal-event')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="event-modal-form">
+        <input type="hidden" id="event-modal-id">
+        <div class="form-group">
+          <label for="event-modal-name">Programme Name</label>
+          <input type="text" id="event-modal-name" placeholder="e.g. Classical Solo Dance" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="event-modal-type">Type</label>
+            <select id="event-modal-type" required>
+              <option value="solo">Solo</option>
+              <option value="group">Group</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="event-modal-category">Category</label>
+            <select id="event-modal-category" required>
+              <option value="stage">Stage</option>
+              <option value="non-stage">Non-Stage</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+          <h4 style="margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-secondary); font-family: var(--font-heading);">Point Configuration Weights</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">Leave empty to inherit standard global defaults.</p>
+          <div class="form-row" style="grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 0.75rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="event-modal-pts-1st" style="font-size: 0.8rem;">1st Place</label>
+              <input type="number" id="event-modal-pts-1st" placeholder="Default" min="0">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="event-modal-pts-2nd" style="font-size: 0.8rem;">2nd Place</label>
+              <input type="number" id="event-modal-pts-2nd" placeholder="Default" min="0">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="event-modal-pts-3rd" style="font-size: 0.8rem;">3rd Place</label>
+              <input type="number" id="event-modal-pts-3rd" placeholder="Default" min="0">
+            </div>
+          </div>
+          <div class="form-row" style="grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="event-modal-pts-gradeA" style="font-size: 0.8rem;">Grade A Points</label>
+              <input type="number" id="event-modal-pts-gradeA" placeholder="Default" min="0">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="event-modal-pts-gradeB" style="font-size: 0.8rem;">Grade B Points</label>
+              <input type="number" id="event-modal-pts-gradeB" placeholder="Default" min="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-event')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Programme</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- 2. ADD / EDIT TEAM MODAL -->
+  <div class="modal-backdrop" id="modal-team">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="team-modal-title">Configure Team</h3>
+        <button class="modal-close" onclick="closeModal('modal-team')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="team-modal-form">
+        <input type="hidden" id="team-modal-id">
+        <div class="form-group">
+          <label for="team-modal-name">Team / House Name</label>
+          <input type="text" id="team-modal-name" placeholder="e.g. Emerald Gryffons" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="team-modal-emblem">Emblem / Emoji</label>
+            <input type="text" id="team-modal-emblem" placeholder="🦅" maxlength="2" required style="font-size: 1.2rem; text-align: center;">
+          </div>
+          <div class="form-group">
+            <label for="team-modal-color">Representative Color</label>
+            <input type="color" id="team-modal-color" value="#8b5cf6" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-team')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Team</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. HOUSE DETAILS MODAL -->
+  <div class="modal-backdrop" id="modal-house-details">
+    <div class="modal-content" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 id="house-details-title" style="display: flex; align-items: center; gap: 0.5rem;">
+          <span id="house-details-emblem"></span> <span id="house-details-name"></span> Breakdown
+        </h3>
+        <button class="modal-close" onclick="closeModal('modal-house-details')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div style="max-height: 400px; overflow-y: auto;">
+        <table class="table-container" style="margin-top: 0;">
+          <thead>
+            <tr>
+              <th>Programme</th>
+              <th>Type</th>
+              <th>Participant</th>
+              <th>Place</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody id="house-details-tbody">
+            <!-- Dynamically populated details rows -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-house-details')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ADMIN LOGIN MODAL -->
+  <div class="modal-backdrop" id="modal-admin-login">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3>🔐 Admin Login</h3>
+        <button class="modal-close" onclick="closeModal('modal-admin-login')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="admin-login-form">
+        <p style="font-size: 0.85rem; margin-bottom: 1.25rem; color: var(--text-secondary);">Enter the Administrator Passcode PIN to unlock score entry and configuration controls. Default PIN: <strong>1234</strong></p>
+        
+        <div id="admin-login-error" style="display: none; background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); color: #f43f5e; padding: 0.6rem 0.85rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1rem;">
+          Incorrect Admin PIN! Please try again.
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-pin-input">Passcode PIN</label>
+          <input type="password" id="admin-pin-input" placeholder="e.g. 1234" required style="letter-spacing: 0.2em; text-align: center; font-size: 1.2rem;">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-admin-login')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Unlock Admin Mode</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/db.js" defer></script>
+  <script src="js/app.js" defer></script>
+
+</body>
+</html>
